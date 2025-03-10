@@ -39,7 +39,7 @@ O projeto está dividido em duas partes:
 
 Antes de iniciar o projeto, é necessário criar a base de dados, as tabelas e inserir dados de exemplo. Siga os passos abaixo:
 
-### Criação da Base de Dados:**
+### Criação da Base de Dados:
 
    Conecte-se ao seu servidor MariaDBe execute a seguinte query para criar a base de dados `wp_db`:
 
