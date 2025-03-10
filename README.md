@@ -35,7 +35,99 @@ O projeto está dividido em duas partes:
 
 ## Passo a Passo para Executar o Projeto
 
-### 1. Configuração e Execução do Backend
+## Configuração do Banco de Dados
+
+Antes de iniciar o projeto, é necessário criar a base de dados, as tabelas e inserir dados de exemplo. Siga os passos abaixo:
+
+### Criação da Base de Dados:**
+
+   Conecte-se ao seu servidor MariaDBe execute a seguinte query para criar a base de dados `wp_db`:
+
+```sql
+CREATE DATABASE wp_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+Criação das Tabelas:
+
+Execute as queries abaixo para criar as tabelas :
+
+Tabela Clientes:
+
+```sql
+CREATE TABLE Clientes (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+email VARCHAR(100) NOT NULL UNIQUE,
+telefone VARCHAR(15) NOT NULL,
+senha VARCHAR(255) NOT NULL,
+verification_code VARCHAR(10) NULL,
+code_expires_at DATETIME NULL,
+is_verified BOOLEAN NOT NULL DEFAULT FALSE,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+  
+Tabela Produtos:
+
+```sql
+CREATE TABLE Produtos (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+descricao TEXT,
+preco DECIMAL(10,2),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+Tabela Subscricoes:
+
+```sql
+CREATE TABLE subscricoes (
+id INT AUTO_INCREMENT PRIMARY KEY,
+cliente_id INT NOT NULL,
+produto_id INT NOT NULL,
+data_subscricao DATE,
+FOREIGN KEY (cliente_id) REFERENCES Clientes(id),
+FOREIGN KEY (produto_id) REFERENCES Produtos(id)
+) COLLATE='utf8mb4_unicode_ci' ENGINE=InnoDB;
+```
+
+### Inserir Dados de Exemplo:
+
+#### Inserir Utilizadores:
+
+Exemplo para inserir um utilizador com id 1:
+
+```sql
+INSERT INTO Clientes (nome, email, telefone, senha)
+VALUES ('Utilizador Exemplo', 'exemplo@dominio.com', '912345678', 'senha_hash_aqui');
+```
+Nota: Utilize password_hash('sua_senha', PASSWORD_DEFAULT) no PHP para gerar o hash da senha e substitua 'senha_hash_aqui'.
+
+#### Inserir Produtos:
+
+```sql
+INSERT INTO Produtos (nome, descricao, preco)
+VALUES
+('Netflix Subscription', 'Serviço de subscrição para streaming de filmes e séries', 15.99),
+('Spotify Premium', 'Subscrição para streaming de música sem anúncios', 9.99),
+('Amazon Prime', 'Serviço de subscrição que oferece envio gratuito, streaming e outros benefícios', 12.99),
+('Adobe Creative Cloud', 'Subscrição com acesso à suite de softwares Adobe', 52.99);
+```
+
+#### Inserir Subscrições:
+
+Se o utilizador com id 1 subscreveu todos os produtos
+
+```sql
+INSERT INTO subscricoes (cliente_id, produto_id, data_subscricao)
+VALUES
+(1, 1, CURDATE()),
+(1, 2, CURDATE()),
+(1, 3, CURDATE()),
+(1, 4, CURDATE());
+```
+
+
+### 2. Configuração e Execução do Backend
 
 #### Instalar Dependências do Composer
 
@@ -58,7 +150,7 @@ Isso iniciará o servidor embutido do PHP, usando a pasta public como raiz.
 
 Você pode testar os endpoints (por exemplo, http://localhost:8000/get_user.php?cliente_id=1) usando o navegador ou o Postman.
 
-2. Configuração e Execução do Frontend
+### 3.Configuração e Execução do Frontend
 Instalar Dependências do Projeto React Native
 Navegue até a pasta do projeto React Native (onde está o package.json do aplicativo) e execute:
 
